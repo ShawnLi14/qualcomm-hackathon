@@ -1,0 +1,185 @@
+.player-screen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  height: 90px;
+  gap: 24px;
+}
+
+.now-playing {
+  flex: 1;
+  min-width: 180px;
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.album-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.placeholder-cover {
+  background: linear-gradient(135deg, #333, #555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+}
+
+.track-details h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.track-details p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #b3b3b3;
+}
+
+.player-controls {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.control-btn:hover {
+  color: #fff;
+  transform: scale(1.06);
+}
+
+.control-btn.active {
+  color: #1db954;
+}
+
+.control-btn svg {
+  transition: all 0.2s ease;
+}
+
+.play-pause-btn {
+  width: 32px;
+  height: 32px;
+  background-color: #fff;
+  color: #000 !important;
+  border-radius: 50%;
+  font-size: 14px;
+  margin: 0 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.play-pause-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.06);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.play-pause-btn svg {
+  margin-left: 1px; /* Slight offset to center play icon visually */
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.time {
+  font-size: 12px;
+  color: #b3b3b3;
+  min-width: 40px;
+  text-align: center;
+}
+
+.progress {
+  flex: 1;
+  height: 4px;
+  background-color: #4f4f4f;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #fff;
+  border-radius: 2px;
+  position: relative;
+}
+
+.progress-handle {
+  position: absolute;
+  right: -6px;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress:hover .progress-handle {
+  opacity: 1;
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 180px;
+}
+
+.chat-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+}
+
+.chat-input::placeholder {
+  color: #b3b3b3;
+}
+
+.chat-input:focus {
+  outline: 2px solid #1db954;
+  outline-offset: 2px;
+}
