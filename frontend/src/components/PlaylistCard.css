@@ -11,14 +11,28 @@
   background-color: #404040;
 }
 
+.playlist-card.loading {
+  background-color: #1db954;
+  transform: scale(0.98);
+}
+
 .playlist-image {
   width: 100%;
   height: 150px;
-  object-fit: cover;
   border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.playlist-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .placeholder-image {
+  width: 100%;
+  height: 100%;
   background: linear-gradient(135deg, #1db954, #1ed760);
   display: flex;
   align-items: center;
@@ -41,4 +55,28 @@
   font-size: 14px;
   color: #b3b3b3;
   margin: 4px 0 0;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(29, 185, 84, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.loading-spinner {
+  font-size: 24px;
+  color: white;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.5; }
 }

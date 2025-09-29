@@ -23,31 +23,9 @@ const App = () => {
     }
     setIsLoading(false);
 
-    // Listen for Spotify Premium requirement notifications
-    const handlePremiumRequired = (event: CustomEvent) => {
-      alert(`⚠️ ${event.detail.message}\n\nThe Web Playbook SDK requires a Spotify Premium account for music streaming. You can still browse your playlists and use other features.`);
-    };
-
-    window.addEventListener('spotify-premium-required', handlePremiumRequired as EventListener);
-
-    // Define the Spotify SDK ready callback
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('Spotify Web Playback SDK is ready');
-      // The SDK will be initialized by the SpotifyService when needed
-    };
-
-    // Load Spotify SDK
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
-    script.async = true;
-    document.body.appendChild(script);
-
     return () => {
-      // Clean up
-      window.removeEventListener('spotify-premium-required', handlePremiumRequired as EventListener);
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
+      // Clean up polling when app unmounts
+      spotifyService.stopPolling();
     };
   }, []);
 
@@ -59,6 +37,7 @@ const App = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('spotify_access_token');
+    spotifyService.stopPolling();
     setIsAuthenticated(false);
   };
 

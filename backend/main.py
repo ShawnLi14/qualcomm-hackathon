@@ -31,7 +31,6 @@ SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI', 'http://localhost:8000/
 
 # Required scopes for full functionality
 SPOTIFY_SCOPES = [
-    'streaming',                    # Web Playback SDK
     'user-read-playback-state',     # Current playback info
     'user-modify-playback-state',   # Control playback
     'user-read-currently-playing',  # Now playing info
@@ -39,6 +38,7 @@ SPOTIFY_SCOPES = [
     'playlist-read-collaborative',  # Collaborative playlists
     'user-library-read',           # Liked songs
     'user-read-recently-played',    # Recently played
+    'user-read-private',           # User profile
 ]
 
 # Store for temporary state and tokens (in production, use proper storage)
@@ -219,6 +219,170 @@ def get_user_playlists(access_token: str):
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Failed to get playlists: {str(e)}")
 
+# Spotify Connect API endpoints
+
+@app.get("/player/devices")
+def get_devices(access_token: str):
+    """Get user's available devices"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        devices = sp.devices()
+        return devices
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get devices: {str(e)}")
+
+@app.get("/player/currently-playing")
+def get_currently_playing(access_token: str):
+    """Get currently playing track"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        current = sp.currently_playing()
+        
+        if not current or not current.get('item'):
+            return {"is_playing": False, "item": None}
+        
+        track = current['item']
+        return {
+            "is_playing": current['is_playing'],
+            "progress_ms": current.get('progress_ms', 0),
+            "device": current.get('device', {}),
+            "item": {
+                "id": track['id'],
+                "name": track['name'],
+                "artists": [artist['name'] for artist in track['artists']],
+                "album": track['album']['name'],
+                "duration_ms": track['duration_ms'],
+                "uri": track['uri'],
+                "image": track['album']['images'][0]['url'] if track['album']['images'] else None
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get currently playing: {str(e)}")
+
+@app.post("/player/play")
+def start_playback(request: dict, access_token: str):
+    """Start/resume playback"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        device_id = request.get('device_id')
+        uris = request.get('uris', [])
+        context_uri = request.get('context_uri')
+        
+        if uris:
+            sp.start_playback(device_id=device_id, uris=uris)
+        elif context_uri:
+            sp.start_playback(device_id=device_id, context_uri=context_uri)
+        else:
+            sp.start_playback(device_id=device_id)
+            
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to start playback: {str(e)}")
+
+@app.post("/player/pause")
+def pause_playback(access_token: str, device_id: str = None):
+    """Pause playback"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        sp.pause_playback(device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to pause playback: {str(e)}")
+
+@app.post("/player/next")
+def next_track(access_token: str, device_id: str = None):
+    """Skip to next track"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        sp.next_track(device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to skip to next track: {str(e)}")
+
+@app.post("/player/previous")
+def previous_track(access_token: str, device_id: str = None):
+    """Skip to previous track"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        sp.previous_track(device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to skip to previous track: {str(e)}")
+
+@app.post("/player/volume")
+def set_volume(request: dict, access_token: str):
+    """Set playback volume"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        volume_percent = request.get('volume_percent', 50)
+        device_id = request.get('device_id')
+        sp.volume(volume_percent, device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to set volume: {str(e)}")
+
+@app.post("/player/shuffle")
+def set_shuffle(request: dict, access_token: str):
+    """Toggle shuffle mode"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        state = request.get('state', True)
+        device_id = request.get('device_id')
+        sp.shuffle(state, device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to set shuffle: {str(e)}")
+
+@app.post("/player/repeat")
+def set_repeat(request: dict, access_token: str):
+    """Set repeat mode"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        state = request.get('state', 'off')  # 'off', 'track', 'context'
+        device_id = request.get('device_id')
+        sp.repeat(state, device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to set repeat: {str(e)}")
+
+@app.post("/player/seek")
+def seek_to_position(request: dict, access_token: str):
+    """Seek to position in currently playing track"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        position_ms = request.get('position_ms', 0)
+        device_id = request.get('device_id')
+        sp.seek_track(position_ms, device_id=device_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to seek: {str(e)}")
+
+@app.get("/playlist/{playlist_id}/tracks")
+def get_playlist_tracks(playlist_id: str, access_token: str):
+    """Get tracks from a specific playlist"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        results = sp.playlist_tracks(playlist_id, limit=50)
+        
+        tracks = []
+        for item in results['items']:
+            if item['track']:
+                track = item['track']
+                tracks.append({
+                    'id': track['id'],
+                    'name': track['name'],
+                    'artists': [artist['name'] for artist in track['artists']],
+                    'album': track['album']['name'],
+                    'duration_ms': track['duration_ms'],
+                    'uri': track['uri'],
+                    'image': track['album']['images'][0]['url'] if track['album']['images'] else None
+                })
+        
+        return {"tracks": tracks}
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get playlist tracks: {str(e)}")
+
 @app.get("/playlist/{playlist_id}/tracks")
 def get_playlist_tracks(playlist_id: str, access_token: str):
     """Get tracks from a specific playlist"""
@@ -344,6 +508,16 @@ def get_current_playback(access_token: str):
         
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get current playback: {str(e)}")
+
+@app.get("/search")
+def search_spotify(q: str, type: str = 'track,artist,album,playlist', limit: int = 20, access_token: str = ''):
+    """Search Spotify catalog"""
+    try:
+        sp = spotipy.Spotify(auth=access_token)
+        results = sp.search(q=q, type=type, limit=limit)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to search: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
