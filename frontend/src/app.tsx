@@ -77,7 +77,7 @@ const App = () => {
     <div className="app-container">
       <aside className="sidebar">
         <div className="logo">
-          <h1>DJ Assistant</h1>
+          <h1>Vibify</h1>
         </div>
         <nav>
           <ul>

@@ -1,13 +1,17 @@
-# Spotify Wrapper with AI DJ
+# Vibify 🎵
 
-A smart music recommendation app built with Electron + React frontend and Python FastAPI backend.
+*Your AI-Powered Music Companion*
 
-## Features
+Vibify is a smart music streaming app that enhances your Spotify experience with AI-powered contextual recommendations and real-time chat control. Built with Electron + React frontend and Python FastAPI backend.
 
-- **Smart AutoMix Playlists**: Context-aware music recommendations based on your activity
-- **Live DJ Chat**: Use natural language to influence the music selection in real-time
-- **Spotify Integration**: Access your existing playlists and library
-- **Activity Detection**: Automatically adapt music based on what you're doing
+## ✨ Features
+
+- **🎯 Smart AutoMix Playlists**: Context-aware music recommendations based on your activity and mood
+- **💬 Live DJ Chat**: Use natural language to influence music selection in real-time
+- **🔗 Spotify Connect Integration**: Control playback on any of your Spotify devices
+- **📱 Unified Interface**: Access your existing playlists and library in a beautiful, intuitive design
+- **🎮 Real-time Controls**: Play, pause, skip, shuffle, and seek with live progress tracking
+- **🔄 Device Management**: Seamlessly switch between your phones, computers, and speakers
 
 ## Project Structure
 
@@ -71,24 +75,46 @@ A smart music recommendation app built with Electron + React frontend and Python
 
 The FastAPI server will be available at `http://localhost:8000`
 
-## API Endpoints
+## 🔌 API Endpoints
 
-- `GET /` - Health check
-- `POST /auth/spotify` - Spotify authentication
-- `POST /recs/start` - Start recommendations
-- `POST /nlp/parse` - Parse natural language input
-- `WS /ws` - WebSocket for real-time communication
+**Authentication:**
+- `GET /auth/spotify/login` - Generate Spotify OAuth URL
+- `GET /callback` - Handle OAuth callback and token exchange
 
-## Development Status
+**Playback Control:**
+- `GET /player/devices` - Get available Spotify devices
+- `GET /player/currently-playing` - Get current playback state
+- `POST /player/play` - Start/resume playback or play specific content
+- `POST /player/pause` - Pause playback
+- `POST /player/next` - Skip to next track
+- `POST /player/previous` - Skip to previous track
+- `POST /player/seek` - Seek to position in track
+- `POST /player/volume` - Set volume level
+- `POST /player/shuffle` - Toggle shuffle mode
+- `POST /player/repeat` - Set repeat mode
 
-This is a high-level boilerplate. Next steps include:
+**Music Library:**
+- `GET /user/playlists` - Get user's Spotify playlists
+- `GET /playlist/{id}/tracks` - Get tracks from specific playlist
+- `GET /search` - Search Spotify catalog
 
-1. Implement Spotify OAuth integration
-2. Add context detection services
-3. Build recommendation engine with ML models
-4. Integrate LLM for natural language processing
-5. Add proper state management and WebSocket communication
-6. Implement the AutoMix card generation logic
+## 🚀 Current Status
+
+**Vibify is now fully functional with core features implemented!**
+
+✅ **Completed Features:**
+- Spotify OAuth authentication with popup flow
+- Real-time playback controls via Spotify Connect API
+- Live progress tracking and seeking
+- Device selection and management
+- Playlist browsing and click-to-play functionality
+- Beautiful dark-themed UI matching Spotify's design
+
+🔄 **In Development:**
+- AI-powered AutoMix playlist generation
+- Natural language chat interface for music control
+- Context detection and smart recommendations
+- Advanced ML-based music curation
 
 ## Tech Stack
 

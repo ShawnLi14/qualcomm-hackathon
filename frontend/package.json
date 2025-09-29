@@ -1,8 +1,8 @@
 {
-  "name": "frontend",
-  "productName": "frontend",
+  "name": "vibify",
+  "productName": "Vibify",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "AI-powered music companion that enhances your Spotify experience",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

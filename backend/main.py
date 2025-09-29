@@ -13,7 +13,7 @@ import requests
 # Load environment variables
 load_dotenv()
 
-app = FastAPI(title="DJ Assistant Backend")
+app = FastAPI(title="Vibify Backend")
 
 # CORS middleware to allow frontend requests
 app.add_middleware(
@@ -47,7 +47,7 @@ user_tokens = {}
 
 @app.get("/")
 def read_root():
-    return {"message": "DJ Assistant Backend", "status": "running"}
+    return {"message": "Vibify Backend", "status": "running"}
 
 @app.get("/auth/spotify/login")
 def spotify_login():

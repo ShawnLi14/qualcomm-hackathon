@@ -249,7 +249,7 @@ const PlayerScreen = () => {
             </select>
           </div>
         )}
-        <input type="text" placeholder="Talk to the DJ..." className="chat-input" />
+                <input type="text" placeholder="Tell Vibify what you want to hear..." className="chat-input" />
       </div>
     </div>
   );

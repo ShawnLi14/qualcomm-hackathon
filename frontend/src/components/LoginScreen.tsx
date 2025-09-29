@@ -69,7 +69,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     <div className="login-screen">
       <div className="login-content">
         <div className="logo">
-          <h1>DJ Assistant</h1>
+          <h1>Vibify</h1>
           <p>Your AI-powered music companion</p>
         </div>
         
